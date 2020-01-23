@@ -29,6 +29,6 @@ Scrapes the html pages to collect the `year`, `rank`, `song`, and `artist` and s
 
 ## Manual steps
 
-#### Artists' gender
+### Artists' gender
 
-Manually tags each artist as `male`, `female`, or `mixed`. The `mixed` tag is used for musical groups or collaborations with both male and female contributors. It is also used when the artist has explicited stated they identify as non-binary or genderfluid. Genders were manually collected and verified using Google, Wikipedia, and artists' personal websites.
+Each artist was manually tagged as `male`, `female`, or `mixed`. The `mixed` tag is used for musical groups or collaborations with both male and female contributors. It is also used when the artist has explicited stated they identify as non-binary or genderfluid. Genders were manually collected and verified using Google, Wikipedia, and artists' personal websites.
