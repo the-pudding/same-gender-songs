@@ -12,6 +12,7 @@ Node scripts to gather the Billboard Hot 100 songs from each year between 2006â€
 - [request](https://www.npmjs.com/package/request)
 - [fs](https://nodejs.org/api/fs.html)
 - [lodash](https://lodash.com/)
+- [python 3.X](https://www.anaconda.com/distribution/)
 
 ### Install
 
@@ -26,6 +27,10 @@ Pulls down html pages of the [Billboard Hot 100 songs](https://www.billboard.com
 #### `npm run collect-songs`
 
 Scrapes the html pages to collect the `year`, `rank`, `song`, and `artist` and saves into the `output` folder as `song-data.csv`
+
+####`python ./process/s4_extract_features.py`
+
+Parses lyrics to consider pronoun references. Adds `fempro` and `mascpro` pronoun indicator variables, `proref` category variable based on pronouns in lyrics and gender of artist, and `femphrases` and `mascphrases` variables documenting the context of pronoun references for further analysis. 
 
 ## Manual steps
 

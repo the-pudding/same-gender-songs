@@ -4,9 +4,8 @@ import pandas as pd
 
 # Read in data
 #---------------------------------------------
-inputpath = '../output/song-data.csv'
+inputpath = './output/song-data.csv'
 data = pd.read_csv(inputpath)
-
 
 #-------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------
@@ -23,7 +22,6 @@ data['lyrics'] = data['lyrics'].str.lower() # Clean in step 3? - strip punctuati
 
 #-------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------
-
 
 # Flag pronouns used
 #---------------------------------------------
@@ -73,17 +71,12 @@ def proPhraseRegex(pronounlist):
 	'''
 	Takes a List
 	Creates a regex to match the phrase (5 words before and after) a pronoun search term
-	Wont get phrases at the beginning or end of song, regex to capture those too took too long (commented out)
+	Wont get phrases at the beginning or end of song, regex to capture those too took too long
 	'''
 	regex = '(?:[a-z]+ ){5}[a-z]+'
 	for p in pronounlist[:-1]:
 		regex = regex + p + '(?:[a-z]+ ){5}[a-z]+' + '|' + '(?:[a-z]+ ){5}[a-z]+'
 	return regex + pronounlist[-1] + '(?:[a-z]+ ){5}[a-z]+'
-	
-	# regex = '(?:[a-z]* *){5}[a-z]*'
-	# for p in pronounlist[:-1]:
-	# 	regex = regex + p + '(?:[a-z]* *){5}[a-z]*' + '|' + '(?:[a-z]* *){5}[a-z]*'
-	# return regex + pronounlist[-1] + '(?:[a-z]* *){5}[a-z]*'
 
 # Extract pronoun phrases, remove dups (maybe should keep?)
 data['femphrases'] = data['lyrics'].str.findall(proPhraseRegex(fempronouns))
@@ -95,5 +88,5 @@ data['mascphrases'] = [','.join(map(str, l)) for l in list(map(set,data['mascphr
 
 # Write out
 #---------------------------------------------
-outputpath = '../output/song-data-plus.csv'
+outputpath = './output/song-data-plus.csv'
 data.to_csv(outputpath, index=False)
