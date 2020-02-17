@@ -34,7 +34,7 @@ Merges lyrics for Billboard songs listed in song-data.csv by pulling from local 
 
 Script uses the [LyricsGenius package](https://github.com/johnwmillr/LyricsGenius) (`pip install lyricsgenius`) to access the Genius API. A free account is required to obtain the **Client Access Token** referenced in the command line argument. After [signing up for an account](https://genius.com/signup_or_login), [create an API client](https://genius.com/developers) to recieve a personal **Client Access Token**. Additional API documentation is available [here](https://docs.genius.com/) if needed.
 
-The Genius API was unable to find some lyrics using the original `song` and `artist` values in the data as search parameters. Alternate validated search parameters are provided in `genius-manual.csv` in the `process` folder and used in the script to successful merge all lyrics. 
+The Genius API was unable to find some lyrics using the original `song` and `artist` values in the data as search parameters. Alternate validated search parameters are provided in `genius-manual.csv` in the `process` folder and used in the script to successfully merge all lyrics. 
 
 
 #### `python ./process/s4_extract_features.py`
