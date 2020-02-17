@@ -21,7 +21,7 @@ import argparse
 # Paths
 csvpath = './output/song-data.csv'
 lyricspath = './billboard_lyrics/lyrics/lyrics'
-manualpath = './output/genius-manual.csv'
+manualpath = './process/genius-manual.csv'
 outputpath = './output/song-data-lyrics.csv'
 
 # Read in songs data and list of lyrics files
@@ -134,58 +134,3 @@ data['lyrics'] = data.apply(getLyrics, axis=1)
 
 # Write out
 data.to_csv(outputpath, index=False, encoding='utf-8-sig')
-
-
-
-# Test missing songs only to see if they get pulled correctly by lyrics genius
-
-#print(data.head(20))
-# print(data[data['lyrics'] == "not in saved files"].shape)
-
-
-# missing = data[data['lyrics'] == "not in saved files"]
-# missing = missing.reset_index(drop=True).reset_index()
-# #missing.to_csv('./output/missing-lyrics.csv', index=False)
-# print(missing.head())
-# print(missing.shape)
-
-# def getMissLyrics(row):
-# 	'''
-# 	'''
-# 	print(row['index'])
-# 	song = genius.search_song(row['song'], row['artist'])
-# 	if song != None:
-# 		lyric = song.lyrics
-# 		lyric = cleanLyric(lyric)
-# 	else:
-# 		lyric = "ADD MANUALLY"
-# 	print(lyric)
-# 	return(lyric)
-
-# missing['lyrics_test'] = missing.apply(getMissLyrics, axis=1)
-# missing.to_csv('./output/missing-lyrics-test.csv', index=False)
-
-
-# artist = genius.search_artist("Jibbs")
-# print(artist.songs)
-
-# song = genius.search_song("You Need To Calm Down", "Taylor Swift")
-# song = genius.search_song("Walk Me Home", "P!nk")
-# song = genius.search_song("Chain Hang Low", "Jibbs")
-# song = genius.search_song("Poop", "Jibbs")
-# print(song.lyrics)
-
-# teststr = "ddy ¡ay daddy play n skillz katy perry ¡vamos ¿cómo te llamas be"
-
-# print(cleanLyric(teststr))
-# print(teststr.replace("’", ""))
-# print(string.punctuation + "’")
-
-# song = genius.search_song("I'm A Flirt", "R. Kelly")
-# print(song.lyrics)
-# print(cleanLyric(song.lyrics))
-
-# with open('./billboard_lyrics/lyrics/lyrics/Nick_Jonas-Jealous.txt', 'r') as file:
-# 		    lyric = file.read() #.replace('\n', '')
-# 		    #lyric = cleanLyric(lyric)
-# 		    print(lyric)
