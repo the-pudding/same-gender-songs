@@ -12,6 +12,7 @@ Node scripts to gather the Billboard Hot 100 songs from each year between 2006â€
 - [request](https://www.npmjs.com/package/request)
 - [fs](https://nodejs.org/api/fs.html)
 - [lodash](https://lodash.com/)
+- [python 3.X](https://www.anaconda.com/distribution/)
 
 ### Install
 
@@ -26,6 +27,19 @@ Pulls down html pages of the [Billboard Hot 100 songs](https://www.billboard.com
 #### `npm run collect-songs`
 
 Scrapes the html pages to collect the `year`, `rank`, `song`, and `artist` and saves into the `output` folder as `song-data.csv`
+
+#### `python ./process/s3_merge_lyrics.py {Personal Genius Client Access Token}`
+
+Merges lyrics for Billboard songs listed in song-data.csv by pulling from local collection of .txt lyric files or using the Genius API. Adds cleaned lyrics to `lyrics` field and saves into the `output` folder as `song-data-lyrics.csv`.
+
+Script uses the [LyricsGenius package](https://github.com/johnwmillr/LyricsGenius) (`pip install lyricsgenius`) to access the Genius API. A free account is required to obtain the **Client Access Token** referenced in the command line argument. After [signing up for an account](https://genius.com/signup_or_login), [create an API client](https://genius.com/developers) to recieve a personal **Client Access Token**. Additional API documentation is available [here](https://docs.genius.com/) if needed.
+
+The Genius API was unable to find some lyrics using the original `song` and `artist` values in the data as search parameters. Alternate validated search parameters are provided in `genius-manual.csv` in the `process` folder and used in the script to successfully merge all lyrics. 
+
+
+#### `python ./process/s4_extract_features.py`
+
+Parses lyrics to consider gender and love/sex/affection references and adds these features to the data. Features include `femflag`, `mascflag`, and `loveflag` indicator variables based on the presence of dictionary terms listed in the `flag-words.xlsx` file in the `process` folder. An additional `genderref` category variable is added based on the gender references in lyrics and the gender of the artist. `femphrases`, `mascphrases`, and `lovephrases` variables document the context of flag words for further analysis. Exhanced data is saved in the `output` folder as `song-data-plus.csv`.
 
 ## Manual steps
 
