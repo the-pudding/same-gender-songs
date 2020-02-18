@@ -39,7 +39,7 @@ The Genius API was unable to find some lyrics using the original `song` and `art
 
 #### `python ./process/s4_extract_features.py`
 
-Parses lyrics to consider pronoun references. Adds `fempro` and `mascpro` pronoun indicator variables, `proref` category variable based on pronouns in lyrics and gender of artist, and `femphrases` and `mascphrases` variables documenting the context of pronoun references for further analysis
+Parses lyrics to consider gender and love/sex/affection references and adds these features to the data. Features include `femflag`, `mascflag`, and `loveflag` indicator variables based on the presence of dictionary terms listed in the `flag-words.xlsx` file in the `process` folder. An additional `genderref` category variable is added based on the gender references in lyrics and the gender of the artist. `femphrases`, `mascphrases`, and `lovephrases` variables document the context of flag words for further analysis. Exhanced data is saved in the `output` folder as `song-data-plus.csv`.
 
 ## Manual steps
 
