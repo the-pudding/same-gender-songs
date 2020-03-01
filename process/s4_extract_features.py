@@ -9,6 +9,7 @@
 # Import packages
 #---------------------------------------------
 import pandas as pd
+import re 
 
 # Setup
 #---------------------------------------------
@@ -53,12 +54,29 @@ def proPhraseRegex(flaglist):
 	Takes a List
 	Creates a regex to match the phrase (5 words before and after) a pronoun search term
 	Wont get phrases at the beginning or end of song, regex to capture those too took too long
-	TODO - if taking too long, only do this for ones that contain the pronoun, but we dont have too much data
+	TODO - if taking too long, only do this for ones that contain the flag word, but we dont have too much data
 	'''
 	regex = '(?:[a-z]+ ){5}[a-z]+'
 	for f in flaglist[:-1]:
 		regex = regex + f + '(?:[a-z]+ ){5}[a-z]+' + '|' + '(?:[a-z]+ ){5}[a-z]+'
 	return regex + flaglist[-1] + '(?:[a-z]+ ){5}[a-z]+'
+
+def getMatchPhrases(row, flag):
+	'''
+	Takes row or songs with lyrics dataframe, and parameter for which flags to get phrases for
+	Extracts flag phrases from lyrics, removes duplicates (maybe should keep?)
+	'''
+	# Create dictionary of parameters to flag word lists for reference
+	flagdict = {'femflag': femflags, 'mascflag': mascflags, 'loveflag': loveflags}
+	# Only find phrases if matches on a word
+	if row[flag] == 1:
+		# Get phrases
+		regex = proPhraseRegex(flagdict[flag])
+		phrases = re.findall(r'{}'.format(regex), row['lyrics'])
+		phrases = ', '.join(list(set(phrases)))
+		return phrases
+	else:
+		return ""
 
 # Data process
 #---------------------------------------------
@@ -76,13 +94,11 @@ data['genderref'] = data.apply(referenceType, axis=1)
 print(data['genderref'].value_counts()) # Quick table
 print(data.loc[data['loveflag'] == 1]['genderref'].value_counts()) # Quick table
 
-# Extract pronoun phrases, remove dups (maybe should keep?)
-data['femphrases'] = data['lyrics'].str.findall(proPhraseRegex(femflags))
-data['femphrases'] = [', '.join(map(str, l)) for l in list(map(set,data['femphrases']))]
-data['mascphrases'] = data['lyrics'].str.findall(proPhraseRegex(mascflags))
-data['mascphrases'] = [', '.join(map(str, l)) for l in list(map(set,data['mascphrases']))]
-data['lovephrases'] = data['lyrics'].str.findall(proPhraseRegex(loveflags))
-data['lovephrases'] = [', '.join(map(str, l)) for l in list(map(set,data['lovephrases']))]
+# Extract flag phrases
+data['femphases'] = data.apply(getMatchPhrases, flag='femflag', axis=1)
+data['mascphases'] = data.apply(getMatchPhrases, flag='mascflag', axis=1)
+data['lovephases'] = data.apply(getMatchPhrases, flag='loveflag', axis=1)
 
 # Write out
 data.to_csv(outputpath, index=False, encoding='utf-8-sig')
+print("Done")
