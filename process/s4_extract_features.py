@@ -53,8 +53,7 @@ def proPhraseRegex(flaglist):
 	'''
 	Takes a List
 	Creates a regex to match the phrase (5 words before and after) a pronoun search term
-	Wont get phrases at the beginning or end of song, regex to capture those too took too long
-	TODO - if taking too long, only do this for ones that contain the flag word, but we dont have too much data
+	Won't match words at the beginning or end of song (takes longer), this is captured in getMatchPhrases function
 	'''
 	regex = '(?:[a-z]+ ){5}[a-z]+'
 	for f in flaglist[:-1]:
@@ -66,15 +65,36 @@ def getMatchPhrases(row, flag):
 	Takes row or songs with lyrics dataframe, and parameter for which flags to get phrases for
 	Extracts flag phrases from lyrics, removes duplicates (maybe should keep?)
 	'''
+	# Initialize phrases to return
+	phrases = []
+
 	# Create dictionary of parameters to flag word lists for reference
 	flagdict = {'femflag': femflags, 'mascflag': mascflags, 'loveflag': loveflags}
+	
 	# Only find phrases if matches on a word
 	if row[flag] == 1:
+		# Get first and last 10 words
+		beginning = [(" " + w + " ") for w in row['lyrics'].split()[:10]]
+		end = [(" " + w + " ") for w in row['lyrics'].split()[-10:]]
+
+		# Check beginning of lyrics (get overlap of flag words and beginning phrase words and check)
+		begoverlap = [w for w in beginning if w in flagdict[flag]] 
+		if len(begoverlap) > 0:
+			phrases.extend([" ".join(row['lyrics'].split()[:10])])
+
 		# Get phrases
 		regex = proPhraseRegex(flagdict[flag])
-		phrases = re.findall(r'{}'.format(regex), row['lyrics'])
-		phrases = ', '.join(list(set(phrases)))
-		return phrases
+		midphrases = re.findall(r'{}'.format(regex), row['lyrics'])
+		phrases.extend(midphrases)
+
+		# Check end of lyrics (get overlap of flag words and ending phrase words and check)
+		endoverlap = [w for w in end if w in flagdict[flag]] 
+		if len(endoverlap) > 0:
+			phrases.extend([" ".join(row['lyrics'].split()[-10:])])
+
+		# Remove dups, make a string from list
+		strphrases = ', '.join(list(set(phrases)))
+		return strphrases
 	else:
 		return ""
 
