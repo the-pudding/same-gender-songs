@@ -40,14 +40,18 @@ def referenceType(row):
 	Takes row of songs with lyrics dataframe
 	Catagorizes songs based on the gender of the artist and gender references in the lyrics
 	'''
-	if row['femflag'] == 0 & row['mascflag'] == 0:
+	if row['femflag'] == 0 and row['mascflag'] == 0:
 		return 'No reference'
-	elif row['femflag'] == 1 & row['mascflag'] == 1:
+	elif row['femflag'] == 1 and row['mascflag'] == 1:
 		return 'Masc & fem reference'
-	elif (row['gender'] == 'man' and row['mascflag'] == 1) | (row['gender'] == 'woman' and row['femflag'] == 1):
+	elif (row['gender'] == 'man' and row['mascflag'] == 1) or (row['gender'] == 'woman' and row['femflag'] == 1):
 		return 'Same-gender'
-	elif (row['gender'] == 'man' and row['femflag'] == 1) | (row['gender'] == 'woman' and row['mascflag'] == 1):
+	elif (row['gender'] == 'man' and row['femflag'] == 1) or (row['gender'] == 'woman' and row['mascflag'] == 1):
 		return 'Opposite-gender'
+	elif row['femflag'] == 1:
+		return 'Mixed/nb - fem reference only'
+	else:
+		return 'Mixed/nb - masc reference only'
 
 def proPhraseRegex(flaglist):
 	'''
