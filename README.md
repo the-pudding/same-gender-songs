@@ -1,6 +1,6 @@
-# Same-sex love songs 
+# Same-gender love songs 
 
-Node scripts to gather the Billboard Hot 100 songs from each year between 2006–2019 for a project on explicit same-sex love interest songs.
+Node scripts to gather the Billboard Hot 100 songs from each year between 2006–2019 for a project on explicit same-gender love interest songs.
 
 ## Setup
 
