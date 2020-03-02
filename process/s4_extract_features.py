@@ -26,13 +26,11 @@ data = pd.read_csv(lyricdatapath)
 femflags = pd.read_excel(flaglistspath, sheet_name='womanFlags', header=None).values[:, 0].tolist()
 mascflags = pd.read_excel(flaglistspath, sheet_name='manFlags', header=None).values[:, 0].tolist() # if always reads first sheet, update pandas package (pip install --upgrade pandas)
 loveflags = pd.read_excel(flaglistspath, sheet_name='loveFlags', header=None).values[:, 0].tolist()
-firstflags = pd.read_excel(flaglistspath, sheet_name='firstFlags', header=None).values[:, 0].tolist()
 
 # Pad each flag in lists with spaces (instead of tokenizing?)
 femflags = [(" " + f + " ") for f in femflags]
 mascflags = [(" " + f + " ") for f in mascflags]
 loveflags = [(" " + f + " ") for f in loveflags]
-firstflags = [(" " + f + " ") for f in firstflags]
  
 # Functions
 #---------------------------------------------
@@ -114,7 +112,6 @@ data['lyrics'] = " " + data['lyrics'] + " "
 data['femflag'] = data['lyrics'].apply(lambda x: any([f in x for f in femflags])).astype(int)
 data['mascflag'] = data['lyrics'].apply(lambda x: any([f in x for f in mascflags])).astype(int)
 data['loveflag'] = data['lyrics'].apply(lambda x: any([f in x for f in loveflags])).astype(int)
-data['firstflag'] = data['lyrics'].apply(lambda x: any([f in x for f in firstflags])).astype(int)
 
 # Create category variable for song based on gender references in lyrics and artist identity
 data['genderref'] = data.apply(referenceType, axis=1)
