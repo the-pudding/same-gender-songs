@@ -3,7 +3,7 @@ const d3 = require('d3');
 const request = require('request');
 
 const OUT_PATH = './output'
-const YEARS = d3.range(2006, 2020)
+const YEARS = d3.range(2006, 2021)
 const BASE_URL_START = 'https://www.billboard.com/charts/year-end/'
 const BASE_URL_END = '/hot-100-songs'
 

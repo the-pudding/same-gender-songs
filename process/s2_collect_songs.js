@@ -5,7 +5,7 @@ const cheerio = require('cheerio');
 
 const IN_PATH = './output'
 const OUT_PATH = './output'
-const YEARS = d3.range(2006, 2020)
+const YEARS = d3.range(2006, 2021)
 const songData = [];
 
 function getSongs(year) {
