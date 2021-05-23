@@ -21,12 +21,29 @@ import argparse
 # Paths
 csvpath = './output/song-data.csv'
 lyricspath = './billboard_lyrics/lyrics/lyrics'
+genderlookuppath = './process/gender-lookup.csv'
 manualpath = './process/genius-manual.csv'
 outputpath = './output/song-data-lyrics.csv'
 
-# Read in songs data and list of lyrics files
-data = pd.read_csv(csvpath)
+# Read in songs data, previous lyrics data, and list of lyrics files
+songsdata = pd.read_csv(csvpath)
+if os.path.exists(outputpath):
+	prevdata = pd.read_csv(outputpath)
+else:
+	prevdata = pd.DataFrame()
 lyricsfiles = [s for s in os.listdir(lyricspath)]
+
+# Remove duplicates (only keep first year the song appreared on the end of year charts)
+songsdata.drop_duplicates(subset = ['song', 'artist'], keep = 'first', inplace = True)
+
+# Merge gender for artists
+gender = pd.read_csv(genderlookuppath)
+songsdata = pd.merge(songsdata, gender, on=['artist'], how='left')
+
+# Find subset to pull lyrics for (if previous file exists)
+int1 = songsdata.merge(prevdata, on=['year', 'rank', 'artist', 'song', 'gender'], how='left', indicator=True)
+pulllyrics = int1[int1['_merge'] == 'left_only']
+pulllyrics = pulllyrics.drop(['_merge'], axis=1)
 
 # Setup lyricsgenius access - Command line will need user's Genius "Access Token" (see documentation)
 parser = argparse.ArgumentParser(description = 'Merge lyrics with Billboard songs')
@@ -126,11 +143,21 @@ def getLyrics(row):
 # Data process
 #---------------------------------------------
 
-# Remove duplicates (only keep first year the song appreared on the end of year charts)
-data.drop_duplicates(subset = ['song', 'artist', 'gender'], keep = 'first', inplace = True) 
+# Get Lyrics for new songs
+pulllyrics['lyrics'] = pulllyrics.apply(getLyrics, axis=1)
 
-# Get Lyrics
-data['lyrics'] = data.apply(getLyrics, axis=1)
+# Combine with previous lyrics data
+data = pd.concat([prevdata, pulllyrics])
+
+# Fix a couple mistakes in previous data
+data.loc[data.artist == "Shakira Featuring Rihanna", 'gender'] = "woman"
+data.loc[data.song == "11-Jul", 'song'] = "7/11"
+
+# Remove duplicates (only keep first year the song appreared on the end of year charts)
+data.drop_duplicates(subset = ['song', 'artist'], keep = 'first', inplace = True)
+
+#Sort
+data = data.sort_values(by=['year', 'rank'])
 
 # Write out
 data.to_csv(outputpath, index=False, encoding='utf-8-sig')
