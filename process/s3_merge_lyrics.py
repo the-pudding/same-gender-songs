@@ -149,11 +149,7 @@ pulllyrics['lyrics'] = pulllyrics.apply(getLyrics, axis=1)
 # Combine with previous lyrics data
 data = pd.concat([prevdata, pulllyrics])
 
-# Fix a couple mistakes in previous data
-data.loc[data.artist == "Shakira Featuring Rihanna", 'gender'] = "woman"
-data.loc[data.song == "11-Jul", 'song'] = "7/11"
-
-# Remove duplicates (only keep first year the song appreared on the end of year charts)
+# Remove duplicates just in case (only keep first year the song appreared on the end of year charts)
 data.drop_duplicates(subset = ['song', 'artist'], keep = 'first', inplace = True)
 
 #Sort
